@@ -60,11 +60,24 @@ def show_melon(melon_id):
 def shopping_cart():
     """Display content of shopping cart."""
     melons_ids = session['shopping_cart']
+    total_count_dict = {}
     melons_cart = []
+    for item in melons_ids:
+        if total_count_dict.get(item):
+            total_count_dict[item] += 1
+        else:
+            total_count_dict[item] = 1
 
+    melons_ids = total_count_dict.keys()
+       
     for melon_id in melons_ids:
         x = melons.get_by_id(melon_id)
-        melons_cart.append((x.common_name, x.price))
+        melons_cart.append((x.common_name, 
+                            x.price, 
+                            total_count_dict[melon_id], 
+                            x.price *total_count_dict[melon_id],
+                            ))
+
 
     # TODO: Display the contents of the shopping cart.
 
@@ -97,6 +110,8 @@ def add_to_cart(id):
     if not session.get('shopping_cart'):
         session['shopping_cart'] = [id]
 
+    # for item in shopping_cart:
+    #     shopping_cart[id] = 
     else:
         session['shopping_cart'].append(id)
     flash("The melon was successfully added to your cart")
