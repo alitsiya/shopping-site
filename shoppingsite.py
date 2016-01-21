@@ -75,9 +75,9 @@ def shopping_cart():
         x = melons.get_by_id(melon_id)
         melons_total += x.price * total_count_dict[melon_id]
         melons_cart.append((x.common_name, 
-                            x.price, 
+                            x.price_str(), 
                             total_count_dict[melon_id], 
-                            x.price * total_count_dict[melon_id],
+                            "$%.2f" % (x.price * total_count_dict[melon_id]),
                             ))
 
 
@@ -94,7 +94,7 @@ def shopping_cart():
 
     return render_template("cart.html",
                             melons_cart=melons_cart,
-                            melons_total=melons_total,
+                            melons_total="$%.2f" % melons_total,
                             )
 
 
