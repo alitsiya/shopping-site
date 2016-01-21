@@ -69,13 +69,15 @@ def shopping_cart():
             total_count_dict[item] = 1
 
     melons_ids = total_count_dict.keys()
-       
+    
+    melons_total = 0
     for melon_id in melons_ids:
         x = melons.get_by_id(melon_id)
+        melons_total += x.price * total_count_dict[melon_id]
         melons_cart.append((x.common_name, 
                             x.price, 
                             total_count_dict[melon_id], 
-                            x.price *total_count_dict[melon_id],
+                            x.price * total_count_dict[melon_id],
                             ))
 
 
@@ -91,7 +93,9 @@ def shopping_cart():
     # - hand to the template the total order cost and the list of melon types
 
     return render_template("cart.html",
-                            melons_cart = melons_cart)
+                            melons_cart=melons_cart,
+                            melons_total=melons_total,
+                            )
 
 
 @app.route("/add_to_cart/<int:id>")
@@ -109,9 +113,6 @@ def add_to_cart(id):
     # - add the id of the melon they bought to the cart in the session
     if not session.get('shopping_cart'):
         session['shopping_cart'] = [id]
-
-    # for item in shopping_cart:
-    #     shopping_cart[id] = 
     else:
         session['shopping_cart'].append(id)
     flash("The melon was successfully added to your cart")
