@@ -7,10 +7,11 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
+import customers
 
 
 app = Flask(__name__)
@@ -134,9 +135,19 @@ def process_login():
     dictionary, look up the user, and store them in the session.
     """
 
-    # TODO: Need to implement this!
+    email = request.form.get("email")
+    password = request.form.get("password")
+    user = customers.get_by_email(email)
 
-    return "Oops! This needs to be implemented"
+    if user.password == password:
+        flash("You're successfully logged in")
+        return redirect('/melons')
+
+    else:
+        flash("Invalid password")
+        return redirect('/login')
+        
+
 
 
 @app.route("/checkout")
